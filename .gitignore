@@ -1,0 +1,9 @@
+*.pyc
+*.pyo
+*.egg*
+build
+dist
+*.log
+*.sublime*
+/test
+.coverage
