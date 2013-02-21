@@ -1,3 +1,3 @@
-from .view import View,LoadingBarView
+from .view import View
 from .controller import Controller, ControllerData
 from .binder import Binder

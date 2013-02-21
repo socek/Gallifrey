@@ -30,24 +30,3 @@ class View(QWidget):
 
     def connect_signals(self):
         pass
-
-
-class LoadingBarView(View):
-
-    def create_design(self):
-        def create_loading_bar(lay):
-            bar = QProgressBar()
-            bar.setMaximum(0)
-            bar.setTextVisible(False)
-            bar.setContentsMargins(0, 0, 0, 0)
-            lay.addWidget(bar)
-            return bar
-
-        def create_layout():
-            lay = QVBoxLayout(self)
-            lay.setContentsMargins(0, 0, 0, 0)
-            lay.setAlignment(Qt.AlignTop)
-            return lay
-        #-----------------------------------------------------------------------
-        lay = create_layout()
-        create_loading_bar(lay)

@@ -41,6 +41,10 @@ class BinderTest(BaseTest):
                 pass
         #-----------------------------------------------------------------------)
         self.assertRaises(MissingMethodImplementationError, create_test_binder)
+        try:
+            create_test_binder()
+        except MissingMethodImplementationError, er:
+            self.assertEqual("<class 'gallifrey.tests.binder.TestBinder'> create_controller", str(er))
 
     def test_smallest_binder(self):
         class TestBinder(Binder):

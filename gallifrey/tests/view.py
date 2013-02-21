@@ -14,12 +14,13 @@ class ViewTest(BaseTest):
 
     def test_create_layout_sucess(self):
         def create_test_view():
-            class TestView(View):
+            class TestView2(View):
                 def create_design(self):
                     pass
+            TestView2()
             return True
         #-----------------------------------------------------------------------)
-        self.assertTrue(create_test_view)
+        self.assertTrue(create_test_view())
 
 
     def test_connecting_signals(self):
