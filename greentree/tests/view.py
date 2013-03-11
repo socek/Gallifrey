@@ -22,7 +22,6 @@ class ViewTest(BaseTest):
         #-----------------------------------------------------------------------)
         self.assertTrue(create_test_view())
 
-
     def test_connecting_signals(self):
         class TestView(View):
             def create_design(self):

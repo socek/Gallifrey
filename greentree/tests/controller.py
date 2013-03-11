@@ -1,6 +1,7 @@
 from greentree import Controller, ControllerData
 from .base import BaseTest
 
+
 class ControllerDataTest(BaseTest):
 
     def test_adding_binder_signals(self):
@@ -24,6 +25,7 @@ class ControllerDataTest(BaseTest):
         self.assertTrue(view_name in cd.view_signals)
         self.assertTrue(signal_name in cd.view_signals[view_name])
         self.assertEqual((arg1,), cd.view_signals[view_name][signal_name])
+
 
 class ControllerTest(BaseTest):
 

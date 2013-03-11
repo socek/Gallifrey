@@ -18,6 +18,7 @@ class BinderType(type(Qt), type):
         if classfullname != BinderType.main_class:
             check_if_methods_are_implemented(['create_controller'])
 
+
 class Binder(QWidget):
 
     __metaclass__ = BinderType
