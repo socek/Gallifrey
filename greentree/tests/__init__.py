@@ -15,11 +15,11 @@ def create_qt_app():
 
 
 def import_all_tests():
-    from gallifrey import tests
+    from greentree import tests
     pkgpath = os.path.dirname(tests.__file__)
     modules = [name for _, name, _ in pkgutil.iter_modules([pkgpath])]
     for module in modules:
-        __import__('gallifrey.tests.%s' % (module))
+        __import__('greentree.tests.%s' % (module))
 
 
 def get_all_test_suite():

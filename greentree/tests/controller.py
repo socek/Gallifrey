@@ -1,4 +1,4 @@
-from gallifrey import Controller, ControllerData
+from greentree import Controller, ControllerData
 from .base import BaseTest
 
 class ControllerDataTest(BaseTest):

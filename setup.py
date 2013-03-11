@@ -9,7 +9,7 @@ dependency_links = [
 ]
 
 if __name__ == '__main__':
-    setup(name='gallifrey',
+    setup(name='greentree',
           version='0.1.0',
           description="MVC like design pattern for PySide.",
           author='Dominik "Socek" Długajczyk',
@@ -17,5 +17,5 @@ if __name__ == '__main__':
           packages=find_packages(),
           install_requires=install_requires,
           dependency_links=dependency_links,
-          test_suite='gallifrey.tests.get_all_test_suite',
+          test_suite='greentree.tests.get_all_test_suite',
           )

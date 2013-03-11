@@ -5,7 +5,7 @@ from .error import MissingMethodImplementationError
 
 class BinderType(type(Qt), type):
 
-    main_class = 'gallifrey.binder.Binder'
+    main_class = 'greentree.binder.Binder'
 
     def __init__(cls, name, bases, dct):
         def check_if_methods_are_implemented(methods_name):

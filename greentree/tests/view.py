@@ -1,6 +1,6 @@
-from gallifrey import View
-from gallifrey.tests.base import BaseTest
-from gallifrey.error import MissingMethodImplementationError
+from greentree import View
+from greentree.tests.base import BaseTest
+from greentree.error import MissingMethodImplementationError
 
 
 class ViewTest(BaseTest):

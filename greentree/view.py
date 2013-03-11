@@ -1,11 +1,11 @@
 from PySide.QtCore import Qt
-from PySide.QtGui import QWidget, QVBoxLayout, QProgressBar
+from PySide.QtGui import QWidget
 from .error import MissingMethodImplementationError
 
 
 class ViewType(type(Qt), type):
 
-    main_class = 'gallifrey.view.View'
+    main_class = 'greentree.view.View'
 
     def __init__(cls, name, bases, dct):
         def check_if_methods_are_implemented(methods_name):

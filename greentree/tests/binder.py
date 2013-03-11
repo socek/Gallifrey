@@ -1,7 +1,7 @@
 from PySide.QtCore import Signal
-from gallifrey import Binder, Controller, View, ControllerData
-from gallifrey.tests.base import BaseTest
-from gallifrey.error import MissingMethodImplementationError
+from greentree import Binder, Controller, View, ControllerData
+from greentree.tests.base import BaseTest
+from greentree.error import MissingMethodImplementationError
 
 view_name = 'someviewname'
 
@@ -44,7 +44,7 @@ class BinderTest(BaseTest):
         try:
             create_test_binder()
         except MissingMethodImplementationError, er:
-            self.assertEqual("<class 'gallifrey.tests.binder.TestBinder'> create_controller", str(er))
+            self.assertEqual("<class 'greentree.tests.binder.TestBinder'> create_controller", str(er))
 
     def test_smallest_binder(self):
         class TestBinder(Binder):
