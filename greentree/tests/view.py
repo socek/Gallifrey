@@ -27,7 +27,7 @@ class ViewTest(BaseTest):
             def create_design(self):
                 pass
 
-            def connect_signals(self):
+            def connect_qt_signals(self):
                 self.test = True
 
         view = TestView()

@@ -12,7 +12,7 @@ class ControllerDataTest(BaseTest):
         cd.add_binder_signal(signal_name, arg1)
 
         self.assertTrue(signal_name in cd.binder_signals)
-        self.assertEqual((arg1,), cd.binder_signals[signal_name])
+        self.assertEqual(((arg1,), {}), cd.binder_signals[signal_name])
 
     def test_adding_view_signals(self):
         view_name = 'view name'
@@ -24,7 +24,8 @@ class ControllerDataTest(BaseTest):
 
         self.assertTrue(view_name in cd.view_signals)
         self.assertTrue(signal_name in cd.view_signals[view_name])
-        self.assertEqual((arg1,), cd.view_signals[view_name][signal_name])
+        self.assertEqual(((arg1,), {}), cd.view_signals[
+                         view_name][signal_name])
 
 
 class ControllerTest(BaseTest):

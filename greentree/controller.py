@@ -6,13 +6,13 @@ class ControllerData(object):
         self.binder_signals = {}
         self.view_signals = {}
 
-    def add_binder_signal(self, signal_name, *args):
-        self.binder_signals[signal_name] = args
+    def add_binder_signal(self, signal_name, *args, **kwargs):
+        self.binder_signals[signal_name] = (args, kwargs)
 
-    def add_view_signal(self, view_name, signal_name, *args):
+    def add_view_signal(self, view_name, signal_name, *args, **kwargs):
         if not view_name in self.view_signals:
             self.view_signals[view_name] = {}
-        self.view_signals[view_name][signal_name] = args
+        self.view_signals[view_name][signal_name] = (args, kwargs)
 
 
 class Controller(QObject):

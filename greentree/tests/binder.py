@@ -19,13 +19,12 @@ class TestController(Controller):
 
 
 class TestView(View):
-    sig2 = Signal((object,))
-
     def create_design(self):
         pass
 
-    def connect_signals(self):
-        self.sig2.connect(self.do_something)
+    def generate_signals(self):
+        super(TestView, self).generate_signals()
+        self.add_signal('sig2', self.do_something)
 
     def do_something(self, *args):
         self.test2 = args
@@ -56,12 +55,12 @@ class BinderTest(BaseTest):
         self.assertEqual({}, binder.views)
         self.assertEqual(controller, binder.controller)
 
-    def test_connect_signals(self):
+    def test_connect_qt_signals(self):
         class TestBinder(Binder):
             def create_controller(self):
                 return controller
 
-            def connect_signals(self):
+            def connect_qt_signals(self):
                 self.test = True
 
         binder = TestBinder()
@@ -86,15 +85,13 @@ class BinderTest(BaseTest):
 
     def test_binder_signals(self):
         class TestBinder(Binder):
-            sig = Signal((object,))
-
             def create_controller(self):
                 return controller
 
-            def connect_signals(self):
-                self.sig.connect(self.on_sig)
+            def generate_signals(self):
+                self.add_signal('sig', self.sig)
 
-            def on_sig(self, *args):
+            def sig(self, *args):
                 self.test = args
 
         binder = TestBinder()
