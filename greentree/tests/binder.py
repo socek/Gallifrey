@@ -1,4 +1,3 @@
-from PySide.QtCore import Signal
 from greentree import Binder, Controller, View, ControllerData
 from greentree.tests.base import BaseTest
 from greentree.error import MissingMethodImplementationError

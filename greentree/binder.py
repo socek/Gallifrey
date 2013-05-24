@@ -1,5 +1,7 @@
-from PySide.QtCore import Qt, Signal, Slot
+from PySide.QtCore import Qt
 from PySide.QtGui import QWidget, QVBoxLayout
+from greentree.signals import SignalReadyMixin
+
 from .error import MissingMethodImplementationError
 
 
@@ -19,16 +21,13 @@ class BinderType(type(Qt), type):
             check_if_methods_are_implemented(['create_controller'])
 
 
-class Binder(QWidget):
+class Binder(QWidget, SignalReadyMixin):
 
     __metaclass__ = BinderType
 
-    mainsignal = Signal(object, object)
-
     def __init__(self, parent=None):
         super(Binder, self).__init__(parent=parent)
-        self.signals = {}
-        self.mainsignal.connect(self.on_mainsignal)
+        self.signals_init()
         self._parent = parent
         self.views = {}
 
@@ -64,22 +63,6 @@ class Binder(QWidget):
 
         emit_binder_signals()
         emit_views_signals()
-
-    @Slot()
-    def on_mainsignal(self, signal, args):
-        for method in self.signals[signal]:
-            method(*args[0], **args[1])
-
-    def add_signal(self, name, method):
-        if name not in self.signals:
-            self.signals[name] = []
-        self.signals[name].append(method)
-
-    def gtemit(self, signal, *args, **kwargs):
-        self.mainsignal.emit(signal, (args, kwargs))
-
-    def generate_signals(self):
-        pass
 
     def create_layout(self):
         return QVBoxLayout(self)
