@@ -1,6 +1,6 @@
+from PySide.QtCore import QObject
 from greentree.signals import SignalReadyMixin
 from greentree.tests.base import BaseTest
-from PySide.QtCore import QObject
 
 
 signal_name = 'sig'
@@ -47,6 +47,7 @@ class SignalReadyMixinTest(BaseTest):
 
     def test_emiting_signals(self):
         ret = {}
+
         def testmethod_2(*args, **kwargs):
             ret['args'] = args
             ret['kwargs'] = kwargs
@@ -60,4 +61,3 @@ class SignalReadyMixinTest(BaseTest):
 
         self.assertEqual((1,), ret['args'])
         self.assertEqual({'arg2': 2}, ret['kwargs'])
-

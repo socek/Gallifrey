@@ -32,43 +32,49 @@ class Binder(QWidget, SignalReadyMixin):
         self.views = {}
 
         self.generate_views()
-        self.connect_qt_signals()
         self.controller = self.create_controller()
 
         layout = self.create_layout()
         self.add_all_views_to_layout(layout)
 
-        self.generate_signals()
-
-    def add_view(self, name, view_cls):
-        self.views[name] = view_cls(parent=self._parent)
+    def add_view(self, view_cls):
+        view = view_cls(binder=self, parent=self._parent)
+        self.views[view.name()] = view
 
     def add_all_views_to_layout(self, layout):
         for name, view in self.views.items():
             layout.addWidget(view)
 
     def make_controller_action(self, method_name, *args, **kwargs):
-        def emit_binder_signals():
+        def emit_binder_signals(controller_data):
             for signal_name, (args, kwargs) in controller_data.binder_signals.items():
                 self.gtemit(signal_name, *args, **kwargs)
 
-        def emit_views_signals():
+        def emit_views_signals(controller_data):
             for view_name, data in controller_data.view_signals.items():
                 view = self.views[view_name]
                 for signal_name, (args, kwargs) in data.items():
                     view.gtemit(signal_name, *args, **kwargs)
 
-        method = getattr(self.controller, method_name)
-        controller_data = method(*args, **kwargs)
+        controller_data = self.controller.do_action(
+            method_name, *args, **kwargs)
 
-        emit_binder_signals()
-        emit_views_signals()
+        emit_binder_signals(controller_data)
+        emit_views_signals(controller_data)
+
+    def hide_all(self, except_name=None):
+        for view_name, view in self.views.items():
+            if view_name == except_name:
+                view.show()
+            else:
+                view.hide()
 
     def create_layout(self):
         return QVBoxLayout(self)
 
-    def connect_qt_signals(self):
-        pass
-
     def generate_views(self):
         pass
+
+    def generate_signals(self):
+        super(Binder, self).generate_signals()
+        self.add_signal('hide_all', self.hide_all)

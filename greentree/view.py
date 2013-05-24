@@ -25,17 +25,16 @@ class View(QWidget, SignalReadyMixin):
 
     __metaclass__ = ViewType
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, binder, *args, **kwargs):
         super(View, self).__init__(*args, **kwargs)
         self.signals_init()
         self.create_design()
-        self.generate_signals()
-        self.connect_qt_signals()
+        self.binder = binder
 
     def generate_signals(self):
         super(View, self).generate_signals()
         self.add_signal('show', self.show)
         self.add_signal('hide', self.hide)
 
-    def connect_qt_signals(self):
-        pass
+    def name(self):
+        return self.__class__.__name__

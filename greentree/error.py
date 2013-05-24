@@ -5,3 +5,6 @@ class MissingMethodImplementationError(Exception):
 
     def __str__(self):
         return ' '.join([str(self.cls), self.method_name])
+
+class NoViewSelected(Exception):
+    pass

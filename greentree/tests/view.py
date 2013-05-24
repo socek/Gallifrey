@@ -1,6 +1,6 @@
 from greentree import View
-from greentree.tests.base import BaseTest
 from greentree.error import MissingMethodImplementationError
+from greentree.tests.base import BaseTest
 
 
 class ViewTest(BaseTest):
@@ -9,26 +9,42 @@ class ViewTest(BaseTest):
         def create_test_view():
             class TestView(View):
                 pass
-        #-----------------------------------------------------------------------)
+        #----------------------------------------------------------------------
         self.assertRaises(MissingMethodImplementationError, create_test_view)
 
     def test_create_layout_sucess(self):
         def create_test_view():
             class TestView2(View):
+
                 def create_design(self):
                     pass
-            TestView2()
+            TestView2(None)
             return True
-        #-----------------------------------------------------------------------)
+        #----------------------------------------------------------------------
         self.assertTrue(create_test_view())
 
-    def test_connecting_signals(self):
-        class TestView(View):
+    def test_name(self):
+        class TestView3(View):
+
             def create_design(self):
                 pass
+        #----------------------------------------------------------------------
+        view = TestView3(None)
 
-            def connect_qt_signals(self):
-                self.test = True
+        self.assertEqual('TestView3', view.name())
 
-        view = TestView()
-        self.assertTrue(view.test)
+    def test_init(self):
+        class TestBinder(object):
+            pass
+
+        class TestView4(View):
+
+            def create_design(self):
+                pass
+        #----------------------------------------------------------------------
+        binder = TestBinder()
+        view = TestView4(binder)
+
+        self.assertEqual(binder, view.binder)
+        self.assertTrue(view.signals['hide'] == [view.hide,])
+        self.assertTrue(view.signals['show'] == [view.show,])
