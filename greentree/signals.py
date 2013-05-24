@@ -7,10 +7,11 @@ class SignalReadyMixin(object):
 
     def signals_init(self):
         self.signals = {}
-        self.mainsignal.connect(self.on_mainsignal)
+        self.mainsignal.connect(self._mainsignal)
+        self.generate_signals()
 
     @Slot()
-    def on_mainsignal(self, signal, args):
+    def _mainsignal(self, signal, args):
         for method in self.signals[signal]:
             method(*args[0], **args[1])
 
