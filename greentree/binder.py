@@ -46,21 +46,15 @@ class Binder(QWidget, SignalReadyMixin):
             layout.addWidget(view)
 
     def make_controller_action(self, method_name, *args, **kwargs):
-        def emit_binder_signals(controller_data):
-            for signal_name, (args, kwargs) in controller_data.binder_signals.items():
-                self.gtemit(signal_name, *args, **kwargs)
-
-        def emit_views_signals(controller_data):
-            for view_name, data in controller_data.view_signals.items():
-                view = self.views[view_name]
-                for signal_name, (args, kwargs) in data.items():
-                    view.gtemit(signal_name, *args, **kwargs)
-
         controller_data = self.controller.do_action(
             method_name, *args, **kwargs)
 
-        emit_binder_signals(controller_data)
-        emit_views_signals(controller_data)
+        for signal in controller_data.get_signals():
+            if signal.view_name:
+                view = self.views[signal.view_name]
+                view.gtemit(signal.name, *args, **kwargs)
+            else:
+                self.gtemit(signal.name, *args, **kwargs)
 
     def hide_all(self, except_name=None):
         for view_name, view in self.views.items():
@@ -70,11 +64,13 @@ class Binder(QWidget, SignalReadyMixin):
                 view.hide()
 
     def create_layout(self):
-        return QVBoxLayout(self)
+        lay = QVBoxLayout(self)
+        lay.setContentsMargins(0, 0, 0, 0)
+        return lay
 
     def generate_views(self):
         pass
 
     def generate_signals(self):
         super(Binder, self).generate_signals()
-        self.add_signal(self.hide_all, 'hide_all')
+        self.add_signal(self.hide_all)

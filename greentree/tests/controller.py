@@ -8,73 +8,105 @@ class ControllerDataTest(BaseTest):
 
     def test_init(self):
         cd = ControllerData()
-        self.assertEqual({}, cd.binder_signals)
-        self.assertEqual({}, cd.view_signals)
+        self.assertEqual([], cd.signals)
+        self.assertEqual([], cd.signals_end)
         self.assertEqual(None, cd.selected_view)
 
-    def test_adding_binder_signals(self):
-        signal_name = 'signal_name'
-        arg1 = 'no name arg'
-
+    def test_add_view_signal(self):
         cd = ControllerData()
-        cd.add_binder_signal(signal_name, arg1)
+        cd.add_view_signal('view_name', 'signal_name', 1, arg2=2)
 
-        self.assertTrue(signal_name in cd.binder_signals)
-        self.assertEqual(((arg1,), {}), cd.binder_signals[signal_name])
+        self.assertEqual(1, len(cd.signals))
+        signal = cd.signals[0]
+        self.assertEqual('signal_name', signal.name)
+        self.assertEqual('view_name', signal.view_name)
+        self.assertEqual(((1,), {'arg2': 2}), signal.args)
 
-    def test_adding_view_signals(self):
+    def test_add_view_signal_at_end(self):
+        cd = ControllerData()
+        cd.add_view_signal_at_end('view_name', 'signal_name', 1, arg2=2)
+
+        self.assertEqual(1, len(cd.signals_end))
+        signal = cd.signals_end[0]
+        self.assertEqual('signal_name', signal.name)
+        self.assertEqual('view_name', signal.view_name)
+        self.assertEqual(((1,), {'arg2': 2}), signal.args)
+
+    def test_add_binder_signal(self):
+        cd = ControllerData()
+        cd.add_binder_signal('signal_name', 1, arg2=2)
+
+        self.assertEqual(1, len(cd.signals))
+        signal = cd.signals[0]
+        self.assertEqual('signal_name', signal.name)
+        self.assertEqual(None, signal.view_name)
+        self.assertEqual(((1,), {'arg2': 2}), signal.args)
+
+    def test_add_binder_signal_at_end(self):
+        cd = ControllerData()
+        cd.add_binder_signal_at_end('signal_name', 1, arg2=2)
+
+        self.assertEqual(1, len(cd.signals_end))
+        signal = cd.signals_end[0]
+        self.assertEqual('signal_name', signal.name)
+        self.assertEqual(None, signal.view_name)
+        self.assertEqual(((1,), {'arg2': 2}), signal.args)
+
+    def test_select_view(self):
+        view_name = 'view name'
+        cd = ControllerData()
+        cd.select_view(view_name)
+
+        self.assertEqual(view_name, cd.selected_view)
+
+    def test_select_view_with_hide_rest(self):
+        view_name = 'view name'
+        cd = ControllerData()
+        cd.select_view(view_name, True)
+
+        self.assertEqual(view_name, cd.selected_view)
+        self.assertEqual(1, len(cd.signals_end))
+        signal = cd.signals_end[0]
+        self.assertEqual('hide_all', signal.name)
+        self.assertEqual(None, signal.view_name)
+        self.assertEqual(((view_name,), {}), signal.args)
+
+    def test_add_signal(self):
         view_name = 'view name'
         signal_name = 'signal_name'
         arg1 = 'no name arg'
         kwarg1 = 'named arg'
 
         cd = ControllerData()
-        cd.add_view_signal(view_name, signal_name, arg1, kwarg1=kwarg1)
+        cd.select_view(view_name)
+        cd.add_signal(signal_name, arg1, kwarg1=kwarg1)
 
-        self.assertTrue(view_name in cd.view_signals)
-        self.assertTrue(signal_name in cd.view_signals[view_name])
-        self.assertEqual(((arg1,), {'kwarg1': kwarg1}), cd.view_signals[
-                         view_name][signal_name])
+        self.assertEqual(1, len(cd.signals))
+        signal = cd.signals[0]
+        self.assertEqual(signal_name, signal.name)
+        self.assertEqual(view_name, signal.view_name)
+        self.assertEqual(((arg1,), {'kwarg1': kwarg1}), signal.args)
 
-    def test_view_select(self):
-        view_name = 'view name'
-        cd = ControllerData()
-        cd.view_select(view_name)
-
-        self.assertEqual(view_name, cd.selected_view)
-
-    def test_view_select_with_hide_rest(self):
-        view_name = 'view name'
-        cd = ControllerData()
-        cd.view_select(view_name, True)
-
-        self.assertEqual(view_name, cd.selected_view)
-        self.assertTrue('hide_all' in cd.binder_signals)
-        self.assertEqual(((view_name,), {}), cd.binder_signals['hide_all'])
-
-    def test_signal_view(self):
-        view_name = 'view name'
-        signal_name = 'signal_name'
-        arg1 = 'no name arg'
-        kwarg1 = 'named arg'
-
-        cd = ControllerData()
-        cd.view_select(view_name)
-        cd.signal_view(signal_name, arg1, kwarg1=kwarg1)
-
-        self.assertTrue(view_name in cd.view_signals)
-        self.assertTrue(signal_name in cd.view_signals[view_name])
-        self.assertEqual(((arg1,), {'kwarg1': kwarg1}), cd.view_signals[
-                         view_name][signal_name])
-
-    def test_signal_view_no_view_selected(self):
+    def test_add_signal_no_view_selected(self):
         signal_name = 'signal_name'
         arg1 = 'no name arg'
         kwarg1 = 'named arg'
 
         cd = ControllerData()
         self.assertRaises(
-            NoViewSelected, cd.signal_view, signal_name, arg1, kwarg1=kwarg1)
+            NoViewSelected, cd.add_signal, signal_name, arg1, kwarg1=kwarg1)
+
+    def test_get_signals(self):
+        cd = ControllerData()
+        cd.add_binder_signal('name1')
+        cd.add_binder_signal('name2')
+        cd.add_binder_signal_at_end('name3')
+        cd.add_binder_signal_at_end('name4')
+
+        signals = cd.get_signals()
+        signal_names = [signal.name for signal in signals]
+
+        self.assertEqual(['name1', 'name2', 'name4', 'name3'], signal_names)
 
 
 class ControllerTest(BaseTest):
@@ -124,4 +156,3 @@ class ControllerTest(BaseTest):
 
         self.assertEqual((self,), ctrl.args)
         self.assertEqual({'kwarg2': kwarg2}, ctrl.kwargs)
-

@@ -10,6 +10,9 @@ class SignalReadyMixin(object):
         self.mainsignal.connect(self._mainsignal)
         self.generate_signals()
 
+    def gtemit(self, signal, *args, **kwargs):
+        self.mainsignal.emit(signal, (args, kwargs))
+
     @Slot()
     def _mainsignal(self, signal, args):
         for method in self.signals[signal]:
@@ -21,9 +24,6 @@ class SignalReadyMixin(object):
         if name not in self.signals:
             self.signals[name] = []
         self.signals[name].append(method)
-
-    def gtemit(self, signal, *args, **kwargs):
-        self.mainsignal.emit(signal, (args, kwargs))
 
     def generate_signals(self):
         pass
