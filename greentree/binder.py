@@ -77,4 +77,4 @@ class Binder(QWidget, SignalReadyMixin):
 
     def generate_signals(self):
         super(Binder, self).generate_signals()
-        self.add_signal('hide_all', self.hide_all)
+        self.add_signal(self.hide_all, 'hide_all')

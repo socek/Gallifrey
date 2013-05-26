@@ -15,7 +15,9 @@ class SignalReadyMixin(object):
         for method in self.signals[signal]:
             method(*args[0], **args[1])
 
-    def add_signal(self, name, method):
+    def add_signal(self, method, name=None):
+        if name is None:
+            name = method.__name__
         if name not in self.signals:
             self.signals[name] = []
         self.signals[name].append(method)

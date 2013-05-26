@@ -26,7 +26,7 @@ class TestView(View):
 
     def generate_signals(self):
         super(TestView, self).generate_signals()
-        self.add_signal('sig2', self.do_something)
+        self.add_signal(self.do_something, 'sig2')
 
     def do_something(self, *args):
         self.test2 = args
@@ -101,7 +101,7 @@ class BinderTest(BaseTest):
                 return controller
 
             def generate_signals(self):
-                self.add_signal('sig', self.sig)
+                self.add_signal(self.sig, 'sig')
 
             def sig(self, *args):
                 self.test = args

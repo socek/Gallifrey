@@ -33,8 +33,8 @@ class View(QWidget, SignalReadyMixin):
 
     def generate_signals(self):
         super(View, self).generate_signals()
-        self.add_signal('show', self.show)
-        self.add_signal('hide', self.hide)
+        self.add_signal(self.show, 'show')
+        self.add_signal(self.hide, 'hide')
 
     def name(self):
         return self.__class__.__name__
