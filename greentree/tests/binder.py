@@ -181,3 +181,51 @@ class BinderTest(BaseTest):
 
         self.assertFalse(binder.views['TestView']._show)
         self.assertTrue(binder.views['TestViewSecond']._show)
+
+    def test_make_controller_action(self):
+        class TestController2(Controller):
+
+            def do_something(self, data):
+                data.add_view_signal('TestView', 'signal_view', 1, kwarg2=2)
+                data.add_binder_signal('signal', 3, kwarg2=4)
+
+        class TestView(View):
+
+            def __init__(self, *args, **kwargs):
+                super(TestView, self).__init__(*args, **kwargs)
+                self._hide = False
+                self._show = False
+
+            def create_design(self):
+                pass
+
+            def gtemit(self, signal, *args, **kwargs):
+                self.signal = signal
+                self.args = args
+                self.kwargs = kwargs
+
+        class TestBinder(Binder):
+
+            def create_controller(self):
+                self._data = {}
+                return TestController2()
+
+            def generate_views(self):
+                self.add_view(TestView)
+
+            def gtemit(self, signal, *args, **kwargs):
+                self.signal = signal
+                self.args = args
+                self.kwargs = kwargs
+
+        binder = TestBinder()
+        binder.make_controller_action('do_something')
+
+        view = binder.views['TestView']
+        self.assertEqual('signal_view', view.signal)
+        self.assertEqual((1,), view.args)
+        self.assertEqual({'kwarg2': 2}, view.kwargs)
+
+        self.assertEqual('signal', binder.signal)
+        self.assertEqual((3,), binder.args)
+        self.assertEqual({'kwarg2': 4}, binder.kwargs)

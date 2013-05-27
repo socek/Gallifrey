@@ -52,9 +52,9 @@ class Binder(QWidget, SignalReadyMixin):
         for signal in controller_data.get_signals():
             if signal.view_name:
                 view = self.views[signal.view_name]
-                view.gtemit(signal.name, *args, **kwargs)
+                view.gtemit(signal.name, *signal.args[0], **signal.args[1])
             else:
-                self.gtemit(signal.name, *args, **kwargs)
+                self.gtemit(signal.name, *signal.args[0], **signal.args[1])
 
     def hide_all(self, except_name=None):
         for view_name, view in self.views.items():
