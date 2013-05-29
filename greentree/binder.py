@@ -17,7 +17,7 @@ class BinderType(type(Qt), type):
         #----------------------------------------------------------------------
         super(BinderType, cls).__init__(name, bases, dct)
         classfullname = '%s.%s' % (cls.__module__, cls.__name__)
-        if classfullname != BinderType.main_class:
+        if classfullname != BinderType.main_class and not cls.__name__.endswith('Base') :
             check_if_methods_are_implemented(['create_controller'])
 
 
