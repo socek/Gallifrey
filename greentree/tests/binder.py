@@ -7,11 +7,11 @@ view_name = 'TestView'
 
 class TestController(Controller):
 
-    def do_something(self, data):
-        data.add_binder_signal('sig', *self.args)
+    def do_something(self, arg=None):
+        self.data.add_binder_signal('sig', *self.args)
 
-    def do_something_view(self, data):
-        data.add_view_signal(view_name, 'sig2', *self.args)
+    def do_something_view(self, arg=None):
+        self.data.add_view_signal(view_name, 'sig2', *self.args)
 
 
 class TestView(View):
@@ -72,25 +72,23 @@ class BinderTest(BaseTest):
         class TestBinder(Binder):
 
             def create_controller(self):
-                return controller
+                pass
 
         binder = TestBinder()
         self.assertEqual(None, binder._parent)
         self.assertEqual({}, binder.views)
-        self.assertEqual(controller, binder.controller)
 
     def test_generate_views(self):
         class TestBinder(Binder):
 
             def create_controller(self):
-                return controller
+                pass
 
             def generate_views(self):
                 self.add_view(TestView)
 
         binder = TestBinder()
         self.assertEqual(None, binder._parent)
-        self.assertEqual(controller, binder.controller)
         self.assertTrue(view_name in binder.views)
         self.assertEqual(TestView, type(binder.views[view_name]))
 
@@ -129,7 +127,7 @@ class BinderTest(BaseTest):
         class TestBinder(Binder):
 
             def create_controller(self):
-                return controller
+                pass
 
             def generate_views(self):
                 self.add_view(TestView)
@@ -140,7 +138,6 @@ class BinderTest(BaseTest):
         binder = TestBinder()
         self.assertEqual(None, binder._parent)
         self.assertTrue(type(binder.views['TestView']) == TestView)
-        self.assertEqual(controller, binder.controller)
         self.assertEqual([binder.hide_all, ], binder.signals['hide_all'])
         self.assertTrue(binder.test_add_all_views_to_layout)
 
@@ -148,7 +145,7 @@ class BinderTest(BaseTest):
         class TestBinder(Binder):
 
             def create_controller(self):
-                return controller
+                pass
 
             def generate_views(self):
                 self.add_view(TestView)
@@ -167,7 +164,7 @@ class BinderTest(BaseTest):
         class TestBinder(Binder):
 
             def create_controller(self):
-                return controller
+                pass
 
             def generate_views(self):
                 self.add_view(TestView)
@@ -185,9 +182,9 @@ class BinderTest(BaseTest):
     def test_make_controller_action(self):
         class TestController2(Controller):
 
-            def do_something(self, data):
-                data.add_view_signal('TestView', 'signal_view', 1, kwarg2=2)
-                data.add_binder_signal('signal', 3, kwarg2=4)
+            def do_something(self):
+                self.data.add_view_signal('TestView', 'signal_view', 1, kwarg2=2)
+                self.data.add_binder_signal('signal', 3, kwarg2=4)
 
         class TestView(View):
 

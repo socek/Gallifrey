@@ -17,7 +17,7 @@ class BinderType(type(Qt), type):
         #----------------------------------------------------------------------
         super(BinderType, cls).__init__(name, bases, dct)
         classfullname = '%s.%s' % (cls.__module__, cls.__name__)
-        if classfullname != BinderType.main_class and not cls.__name__.endswith('Base') :
+        if classfullname != BinderType.main_class and not cls.__name__.endswith('Base'):
             check_if_methods_are_implemented(['create_controller'])
 
 
@@ -32,7 +32,6 @@ class Binder(QWidget, SignalReadyMixin):
         self.views = {}
 
         self.generate_views()
-        self.controller = self.create_controller()
 
         layout = self.create_layout()
         self.add_all_views_to_layout(layout)
@@ -46,7 +45,8 @@ class Binder(QWidget, SignalReadyMixin):
             layout.addWidget(view)
 
     def make_controller_action(self, method_name, *args, **kwargs):
-        controller_data = self.controller.do_action(
+        controller = self.create_controller()
+        controller_data = controller.do_action(
             method_name, *args, **kwargs)
 
         for signal in controller_data.get_signals():

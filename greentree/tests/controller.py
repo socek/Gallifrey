@@ -118,21 +118,21 @@ class ControllerTest(BaseTest):
             self._before = False
             self._after = False
 
-        def before_action(self, data):
-            data._before = True
+        def before_action(self):
+            self.data._before = True
             self._before = True
-            data._after = False
+            self.data._after = False
 
-        def myaction(self, data):
+        def myaction(self, arg1=None, kwarg2=None):
             tester = self.args[0]
-            tester.assertTrue(data._before)
+            tester.assertTrue(self.data._before)
             tester.assertTrue(self._before)
 
-            tester.assertFalse(data._after)
+            tester.assertFalse(self.data._after)
             tester.assertFalse(self._after)
 
-        def after_action(self, data):
-            data._after = True
+        def after_action(self):
+            self.data._after = True
             self._after = True
 
     def test_init(self):

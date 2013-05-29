@@ -59,14 +59,14 @@ class Controller(QObject):
         self.args = args
         self.kwargs = kwargs
 
-        data = ControllerData()
-        self.before_action(data)
-        method(data)
-        self.after_action(data)
-        return data
+        self.data = ControllerData()
+        self.before_action()
+        method(*args, **kwargs)
+        self.after_action()
+        return self.data
 
-    def before_action(self, data):
+    def before_action(self):
         pass
 
-    def after_action(self, data):
+    def after_action(self):
         pass
