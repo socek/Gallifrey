@@ -56,15 +56,11 @@ class Binder(QWidget, SignalReadyMixin):
                 self.gtemit(signal.name, *signal.args[0], **signal.args[1])
 
     def hide_all(self, except_name=None):
-        print '>   hide_all'
         for view_name, view in self.views.items():
             if view_name == except_name:
-                print 'showing', view_name, view.isVisible()
                 if not view.isVisible():
-                    print 'force'
                     view.show()
             else:
-                print 'hidding', view_name
                 view.hide()
 
     def create_layout(self):
