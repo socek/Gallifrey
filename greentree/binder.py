@@ -46,10 +46,9 @@ class Binder(QWidget, SignalReadyMixin):
 
     def make_controller_action(self, method_name, *args, **kwargs):
         controller = self.create_controller()
-        controller_data = controller.do_action(
-            method_name, *args, **kwargs)
+        controller.do_action(method_name, *args, **kwargs)
 
-        for signal in controller_data.get_signals():
+        for signal in controller.get_signals():
             if signal.view_name:
                 view = self.views[signal.view_name]
                 view.gtemit(signal.name, *signal.args[0], **signal.args[1])
@@ -57,10 +56,15 @@ class Binder(QWidget, SignalReadyMixin):
                 self.gtemit(signal.name, *signal.args[0], **signal.args[1])
 
     def hide_all(self, except_name=None):
+        print '>   hide_all'
         for view_name, view in self.views.items():
             if view_name == except_name:
-                view.show()
+                print 'showing', view_name, view.isVisible()
+                if not view.isVisible():
+                    print 'force'
+                    view.show()
             else:
+                print 'hidding', view_name
                 view.hide()
 
     def create_layout(self):

@@ -10,12 +10,28 @@ class Signal(object):
         self.args = (args, kwargs)
 
 
-class ControllerData(object):
+class Controller(QObject):
 
-    def __init__(self):
+    def __init__(self, parent=None):
+        super(Controller, self).__init__(parent=parent)
         self.selected_view = None
         self.signals = []
         self.signals_end = []
+
+    def do_action(self, name, *args, **kwargs):
+        method = getattr(self, name)
+        self.args = args
+        self.kwargs = kwargs
+
+        self.before_action()
+        method(*args, **kwargs)
+        self.after_action()
+
+    def before_action(self):
+        pass
+
+    def after_action(self):
+        pass
 
     def add_view_signal(self, view_name, signal_name, *args, **kwargs):
         self.signals.append(
@@ -47,26 +63,3 @@ class ControllerData(object):
     def get_signals(self):
         reversed_end = list(reversed(self.signals_end))
         return self.signals + reversed_end
-
-
-class Controller(QObject):
-
-    def __init__(self, parent=None):
-        super(Controller, self).__init__(parent=parent)
-
-    def do_action(self, name, *args, **kwargs):
-        method = getattr(self, name)
-        self.args = args
-        self.kwargs = kwargs
-
-        self.data = ControllerData()
-        self.before_action()
-        method(*args, **kwargs)
-        self.after_action()
-        return self.data
-
-    def before_action(self):
-        pass
-
-    def after_action(self):
-        pass

@@ -8,10 +8,10 @@ view_name = 'TestView'
 class TestController(Controller):
 
     def do_something(self, arg=None):
-        self.data.add_binder_signal('sig', *self.args)
+        self.add_binder_signal('sig', *self.args)
 
     def do_something_view(self, arg=None):
-        self.data.add_view_signal(view_name, 'sig2', *self.args)
+        self.add_view_signal(view_name, 'sig2', *self.args)
 
 
 class TestView(View):
@@ -183,8 +183,8 @@ class BinderTest(BaseTest):
         class TestController2(Controller):
 
             def do_something(self):
-                self.data.add_view_signal('TestView', 'signal_view', 1, kwarg2=2)
-                self.data.add_binder_signal('signal', 3, kwarg2=4)
+                self.add_view_signal('TestView', 'signal_view', 1, kwarg2=2)
+                self.add_binder_signal('signal', 3, kwarg2=4)
 
         class TestView(View):
 
