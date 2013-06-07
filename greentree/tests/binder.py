@@ -1,6 +1,7 @@
 from greentree import Binder, Controller, View
 from greentree.tests.base import BaseTest
 from greentree.error import MissingMethodImplementationError
+from mock import patch
 
 view_name = 'TestView'
 
@@ -115,6 +116,12 @@ class BinderTest(BaseTest):
             def create_controller(self):
                 return controller
 
+            def generate_signals(self):
+                self.add_signal(self.sig, 'sig')
+
+            def sig(self, *args):
+                self.test = args
+
             def generate_views(self):
                 self.add_view(TestView)
 
@@ -226,3 +233,46 @@ class BinderTest(BaseTest):
         self.assertEqual('signal', binder.signal)
         self.assertEqual((3,), binder.args)
         self.assertEqual({'kwarg2': 4}, binder.kwargs)
+
+    def test_visible_views(self):
+        class TestBinder(Binder):
+
+            def create_controller(self):
+                pass
+
+            def generate_views(self):
+                self.add_view(TestView)
+                self.add_view(TestViewSecond)
+
+        binder = TestBinder()
+        self.assertEqual([], binder.visible_views())
+
+    def test_visible_views_after_hide_all(self):
+        class TestBinder(Binder):
+
+            def create_controller(self):
+                pass
+
+            def generate_views(self):
+                self.add_view(TestView)
+                self.add_view(TestViewSecond)
+
+        def mock_show(self):
+            self.showed = True
+
+        def mock_hide(self):
+            self.showed = False
+
+        def mock_isVisible(self):
+            try:
+                return self.showed
+            except AttributeError:
+                return False
+
+        binder = TestBinder()
+        with patch.object(View, 'show', mock_show):
+            with patch.object(View, 'hide', mock_hide):
+                with patch.object(View, 'isVisible', mock_isVisible):
+                    binder.hide_all('TestView')
+                    excepted_data = [binder.views['TestView']]
+                    self.assertEqual(excepted_data, binder.visible_views())
