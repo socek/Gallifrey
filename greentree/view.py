@@ -16,20 +16,21 @@ class ViewType(type(Qt), type):
                     raise MissingMethodImplementationError(cls, name)
         #----------------------------------------------------------------------
         super(ViewType, cls).__init__(name, bases, dct)
-        classfullname = '%s.%s' % (cls.__module__, cls.__name__)
-        if classfullname != ViewType.main_class:
+        if 'base' not in dct or dct['base'] == False:
             check_if_methods_are_implemented(['create_design'])
 
 
 class View(QWidget, SignalReadyMixin):
 
     __metaclass__ = ViewType
+    base = True
 
     def __init__(self, binder, *args, **kwargs):
         super(View, self).__init__(*args, **kwargs)
         self.signals_init()
         self.create_design()
         self.binder = binder
+        self.hide()
 
     def generate_signals(self):
         super(View, self).generate_signals()

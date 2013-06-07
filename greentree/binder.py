@@ -7,8 +7,6 @@ from .error import MissingMethodImplementationError
 
 class BinderType(type(Qt), type):
 
-    main_class = 'greentree.binder.Binder'
-
     def __init__(cls, name, bases, dct):
         def check_if_methods_are_implemented(methods_name):
             for name in methods_name:
@@ -16,12 +14,13 @@ class BinderType(type(Qt), type):
                     raise MissingMethodImplementationError(cls, name)
         #----------------------------------------------------------------------
         super(BinderType, cls).__init__(name, bases, dct)
-        classfullname = '%s.%s' % (cls.__module__, cls.__name__)
-        if classfullname != BinderType.main_class and not cls.__name__.endswith('Base'):
+        if 'base' not in dct or dct['base'] == False:
             check_if_methods_are_implemented(['create_controller'])
 
 
 class Binder(QWidget, SignalReadyMixin):
+
+    base = True
 
     __metaclass__ = BinderType
 
@@ -62,6 +61,13 @@ class Binder(QWidget, SignalReadyMixin):
                     view.show()
             else:
                 view.hide()
+
+    def visible_views(self):
+        views = []
+        for view_name, view in self.views.items():
+            if view.isVisible():
+                views.append(view)
+        return views
 
     def create_layout(self):
         lay = QVBoxLayout(self)
